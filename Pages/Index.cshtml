@@ -1,0 +1,67 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Welcome to IndoorBookingSystem</h1>
+        <p class="lead text-muted">
+            Your professional platform for booking indoor sports facilities quickly and efficiently.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-calendar-check display-4 text-primary"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Book Facilities</h5>
+                    <p class="card-text text-muted">
+                        Reserve courts, halls, or any indoor sports space in just a few clicks.
+                    </p>
+                    <a class="btn btn-outline-primary mt-2" href="/Bookings/Index">Book Now</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-people display-4 text-success"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Manage Teams</h5>
+                    <p class="card-text text-muted">
+                        Organize your teams, track players, and manage matches seamlessly.
+                    </p>
+                    <a class="btn btn-outline-success mt-2" href="/Teams/Index">Manage Teams</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-bar-chart-line display-4 text-warning"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Analytics</h5>
+                    <p class="card-text text-muted">
+                        Get insights about bookings, popular times, and user activity on your platform.
+                    </p>
+                    <a class="btn btn-outline-warning mt-2" href="/Analytics/Index">View Analytics</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center">
+        <p class="text-muted">
+            Learn more about <a href="https://learn.microsoft.com/aspnet/core" target="_blank" class="text-decoration-none">building Web apps with ASP.NET Core</a>.
+        </p>
+    </div>
+</div>

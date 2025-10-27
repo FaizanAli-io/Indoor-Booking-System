@@ -1,0 +1,47 @@
+﻿@page
+@model IndoorBookingSystem.Pages.Auth.SignupModel
+
+<div class="vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="card shadow-lg rounded-3 p-4 p-md-5" style="max-width: 450px; width: 100%;">
+        <h2 class="text-center mb-4 fw-bold">Create an Account</h2>
+
+        <form method="post" novalidate>
+            <div class="mb-3">
+                <label asp-for="User.FullName" class="form-label">Full Name</label>
+                <input asp-for="User.FullName" class="form-control" placeholder="Enter your full name" />
+                <span asp-validation-for="User.FullName" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="User.Email" class="form-label">Email</label>
+                <input asp-for="User.Email" class="form-control" placeholder="you@example.com" />
+                <span asp-validation-for="User.Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="User.Role" class="form-label">Role</label>
+                <select asp-for="User.Role" class="form-select">
+                    <option value="CLIENT">Client</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="User.Password" class="form-label">Password</label>
+                <input asp-for="User.Password" type="password" class="form-control" placeholder="At least 8 characters" />
+                <span asp-validation-for="User.Password" class="text-danger small"></span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger text-center py-2">@Model.ErrorMessage</div>
+            }
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Sign Up</button>
+        </form>
+
+        <p class="text-center text-muted mt-3">
+            Already have an account? <a asp-page="/Auth/Login" class="text-decoration-none fw-bold">Login</a>
+        </p>
+    </div>
+</div>

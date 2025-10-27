@@ -1,0 +1,33 @@
+﻿@page
+@model IndoorBookingSystem.Pages.Auth.LoginModel
+
+<div class="vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="card shadow-lg rounded-3 p-4 p-md-5" style="max-width: 450px; width: 100%;">
+        <h2 class="text-center mb-4 fw-bold">Login</h2>
+
+        <form method="post" novalidate>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="you@example.com" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Password</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Your password" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger text-center py-2">@Model.ErrorMessage</div>
+            }
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Login</button>
+        </form>
+
+        <p class="text-center text-muted mt-3">
+            Don’t have an account? <a asp-page="/Auth/Signup" class="text-decoration-none fw-bold">Sign Up</a>
+        </p>
+    </div>
+</div>

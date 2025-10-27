@@ -1,0 +1,43 @@
+﻿@page
+@model IndoorBookingSystem.Pages.Bookings.IndexModel
+@{
+    ViewData["Title"] = "Bookings";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Bookings</h2>
+    @if (Model.UserRole == "ADMIN")
+    {
+        <a class="btn btn-primary" asp-page="Create">Create Booking</a>
+    }
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Location</th>
+            <th>Price</th>
+            <th>Duration</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model.Bookings)
+        {
+            <tr>
+                <td>@booking.Title</td>
+                <td>@booking.Location</td>
+                <td>@booking.Price.ToString("C")</td>
+                <td>@booking.DurationHours hrs</td>
+                <td>
+                    <a class="btn btn-sm btn-info" asp-page="Details" asp-route-id="@booking.Id">View</a>
+                    @if (Model.UserRole == "ADMIN")
+                    {
+                        <a class="btn btn-sm btn-warning" asp-page="Edit" asp-route-id="@booking.Id">Edit</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
