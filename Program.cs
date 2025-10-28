@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add Application Insights (reads connection string from config or env var APPLICATIONINSIGHTS_CONNECTION_STRING)
+builder.Services.AddApplicationInsightsTelemetry();
+
 // Add services
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<AuthService>();

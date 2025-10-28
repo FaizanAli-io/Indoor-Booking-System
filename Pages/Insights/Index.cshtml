@@ -1,0 +1,26 @@
+﻿@page
+@model IndoorBookingSystem.Pages.InsightsModel
+@{
+    ViewData["Title"] = "Insights";
+}
+
+<h2>Application Insights — Track Event</h2>
+
+<form method="post" class="form">
+    <div>
+        <label>Event name</label>
+        <input asp-for="EventName" />
+    </div>
+    <div>
+        <label>Message / Trace</label>
+        <input asp-for="Message" />
+    </div>
+    <div>
+        <button type="submit">Track</button>
+    </div>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div><strong>@Model.StatusMessage</strong></div>
+}
