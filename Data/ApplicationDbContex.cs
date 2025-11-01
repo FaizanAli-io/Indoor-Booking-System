@@ -15,10 +15,27 @@ namespace IndoorBookingSystem.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Ensure Price has proper precision for SQL Server
+            modelBuilder.HasDefaultContainer("AppData");
+
+            modelBuilder.Entity<User>()
+                .HasPartitionKey(u => u.PartitionKey)
+                .ToContainer("AppData")
+                .HasDiscriminator<string>("EntityType")
+                .HasValue("User");
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Id)
+                .ToJsonProperty("id");
+
             modelBuilder.Entity<Booking>()
-                .Property(b => b.Price)
-                .HasPrecision(18, 2);
+                .HasPartitionKey(b => b.PartitionKey)
+                .ToContainer("AppData")
+                .HasDiscriminator<string>("EntityType")
+                .HasValue("Booking");
+
+            modelBuilder.Entity<Booking>()
+                .Property(b => b.Id)
+                .ToJsonProperty("id");
         }
     }
 }

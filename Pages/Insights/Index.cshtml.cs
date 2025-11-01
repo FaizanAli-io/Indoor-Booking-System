@@ -19,9 +19,9 @@ namespace IndoorBookingSystem.Pages
         public string EventName { get; set; } = "CustomEvent";
 
         [BindProperty]
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
 
-        public string StatusMessage { get; set; }
+        public string StatusMessage { get; set; } = string.Empty;
 
         public void OnGet()
         {

@@ -36,7 +36,7 @@ namespace IndoorBookingSystem.Pages.Auth
             // ✅ Save user info in session
             HttpContext.Session.SetString("UserRole", user.Role.ToString());
             HttpContext.Session.SetString("UserName", user.FullName);
-            HttpContext.Session.SetInt32("UserId", user.Id);
+            HttpContext.Session.SetString("UserId", user.Id);
 
             // Redirect to bookings page or dashboard
             return RedirectToPage("/Bookings/Index");

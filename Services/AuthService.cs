@@ -17,8 +17,18 @@ namespace IndoorBookingSystem.Services
 
         public async Task<bool> RegisterUser(User user)
         {
-            if (await _context.Users.AnyAsync(u => u.Email == user.Email))
-                return false; // Email already exists
+            // Ensure partition key is set for the single-container strategy
+            user.PartitionKey ??= "User";
+
+            // Use a top-level query instead of Any/EXISTS to avoid 'root' in subquery
+            var existingId = await _context.Users
+                .AsNoTracking()
+                .Where(u => u.PartitionKey == "User" && u.Email == user.Email)
+                .Select(u => u.Id)
+                .FirstOrDefaultAsync();
+
+            if (!string.IsNullOrEmpty(existingId))
+                return false;
 
             user.Password = HashPassword(user.Password);
             _context.Users.Add(user);

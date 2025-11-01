@@ -1,10 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IndoorBookingSystem.Models
 {
     public class Booking
     {
-        public int Id { get; set; }
+        [Key]
+        [JsonPropertyName("id")]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        [Required]
+        public string PartitionKey { get; set; } = "Booking";
+
+        [Required]
+        public string UserId { get; set; } = string.Empty;
 
         [Required, MinLength(3)]
         public string Title { get; set; } = string.Empty;
@@ -20,9 +30,16 @@ namespace IndoorBookingSystem.Models
         [Required, Range(1, 24)]
         public int DurationHours { get; set; }
 
-        [Required, Range(0, double.MaxValue)]
-        public decimal Price { get; set; }
+        [Required, Range(0, long.MaxValue)]
+        public long PriceCents { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        [NotMapped]
+        public decimal Price
+        {
+            get => PriceCents / 100m;
+            set => PriceCents = (long)Math.Round(value * 100m);
+        }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

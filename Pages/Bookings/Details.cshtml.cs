@@ -1,8 +1,9 @@
-﻿using IndoorBookingSystem.Data;
-using IndoorBookingSystem.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
+using IndoorBookingSystem.Data;
+using IndoorBookingSystem.Models;
 namespace IndoorBookingSystem.Pages.Bookings
 {
     public class DetailsModel : PageModel
@@ -12,9 +13,16 @@ namespace IndoorBookingSystem.Pages.Bookings
 
         public Booking Booking { get; set; } = new();
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        // id is string (Cosmos id). Filter with partition key for correct lookup.
+        public async Task<IActionResult> OnGetAsync(string id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            if (string.IsNullOrEmpty(id)) return NotFound();
+
+            var booking = await _context.Bookings
+                                        .AsNoTracking()
+                                        .Where(b => b.PartitionKey == "Booking" && b.Id == id)
+                                        .FirstOrDefaultAsync();
+
             if (booking == null) return NotFound();
 
             Booking = booking;

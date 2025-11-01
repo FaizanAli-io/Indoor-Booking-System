@@ -15,7 +15,7 @@ namespace IndoorBookingSystem.Pages.Auth
         }
 
         [BindProperty]
-        public User User { get; set; } = new User();
+        public User NewUser { get; set; } = new User();
 
         public string? ErrorMessage { get; set; }
 
@@ -23,10 +23,11 @@ namespace IndoorBookingSystem.Pages.Auth
         {
             if (!ModelState.IsValid) return Page();
 
-            var success = await _authService.RegisterUser(User);
+            var success = await _authService.RegisterUser(NewUser);
             if (!success)
             {
                 ErrorMessage = "Email already registered";
+                ModelState.Clear();
                 return Page();
             }
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace IndoorBookingSystem.Models
 {
@@ -10,7 +11,12 @@ namespace IndoorBookingSystem.Models
 
     public class User
     {
-        public int Id { get; set; }
+        [Key]
+        [JsonPropertyName("id")]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        [Required]
+        public string PartitionKey { get; set; } = "User";
 
         [Required]
         [MinLength(5, ErrorMessage = "Full Name must be at least 5 characters long.")]
@@ -26,5 +32,7 @@ namespace IndoorBookingSystem.Models
         [Required]
         [MinLength(8, ErrorMessage = "Password must be at least 8 characters.")]
         public string Password { get; set; } = string.Empty;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

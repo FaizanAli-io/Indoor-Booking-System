@@ -7,29 +7,29 @@
 
         <form method="post" novalidate>
             <div class="mb-3">
-                <label asp-for="User.FullName" class="form-label">Full Name</label>
-                <input asp-for="User.FullName" class="form-control" placeholder="Enter your full name" />
-                <span asp-validation-for="User.FullName" class="text-danger small"></span>
+                <label asp-for="NewUser.FullName" class="form-label">Full Name</label>
+                <input asp-for="NewUser.FullName" class="form-control" placeholder="Enter your full name" />
+                <span asp-validation-for="NewUser.FullName" class="text-danger small"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="User.Email" class="form-label">Email</label>
-                <input asp-for="User.Email" class="form-control" placeholder="you@example.com" />
-                <span asp-validation-for="User.Email" class="text-danger small"></span>
+                <label asp-for="NewUser.Email" class="form-label">Email</label>
+                <input asp-for="NewUser.Email" class="form-control" placeholder="you@example.com" />
+                <span asp-validation-for="NewUser.Email" class="text-danger small"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="User.Role" class="form-label">Role</label>
-                <select asp-for="User.Role" class="form-select">
+                <label asp-for="NewUser.Role" class="form-label">Role</label>
+                <select asp-for="NewUser.Role" class="form-select">
                     <option value="CLIENT">Client</option>
                     <option value="ADMIN">Admin</option>
                 </select>
             </div>
 
             <div class="mb-3">
-                <label asp-for="User.Password" class="form-label">Password</label>
-                <input asp-for="User.Password" type="password" class="form-control" placeholder="At least 8 characters" />
-                <span asp-validation-for="User.Password" class="text-danger small"></span>
+                <label asp-for="NewUser.Password" class="form-label">Password</label>
+                <input asp-for="NewUser.Password" type="password" class="form-control" placeholder="At least 8 characters" />
+                <span asp-validation-for="NewUser.Password" class="text-danger small"></span>
             </div>
 
             @if (!string.IsNullOrEmpty(Model.ErrorMessage))

@@ -2,6 +2,7 @@
 using IndoorBookingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace IndoorBookingSystem.Pages.Bookings
 {
@@ -13,13 +14,21 @@ namespace IndoorBookingSystem.Pages.Bookings
         [BindProperty]
         public Booking Booking { get; set; } = new();
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        // id is Cosmos string id
+        public async Task<IActionResult> OnGetAsync(string id)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
             if (string.IsNullOrEmpty(userRole) || userRole != "ADMIN")
-                return Forbid();
+                return RedirectToPage("/Auth/Login");
 
-            var booking = await _context.Bookings.FindAsync(id);
+            if (string.IsNullOrEmpty(id)) return NotFound();
+
+            // Load by (PartitionKey, Id)
+            var booking = await _context.Bookings
+                                        .AsNoTracking()
+                                        .Where(b => b.PartitionKey == "Booking" && b.Id == id)
+                                        .FirstOrDefaultAsync();
+
             if (booking == null) return NotFound();
 
             Booking = booking;
@@ -30,20 +39,41 @@ namespace IndoorBookingSystem.Pages.Bookings
         {
             var userRole = HttpContext.Session.GetString("UserRole");
             if (string.IsNullOrEmpty(userRole) || userRole != "ADMIN")
-                return Forbid();
+                return RedirectToPage("/Auth/Login");
 
-            if (!ModelState.IsValid) return Page();
+            // Load existing entity first (tracked) using (PartitionKey, Id)
+            var existing = await _context.Bookings
+                                         .Where(b => b.PartitionKey == "Booking" && b.Id == Booking.Id)
+                                         .FirstOrDefaultAsync();
+            if (existing == null) return NotFound();
 
-            var existingBooking = await _context.Bookings.FindAsync(Booking.Id);
-            if (existingBooking == null) return NotFound();
+            // Update allowed fields
+            existing.Title = Booking.Title;
+            existing.Description = Booking.Description;
+            existing.MediaUrls = Booking.MediaUrls;
+            existing.Price = Booking.Price; // updates PriceCents via setter
+            existing.DurationHours = Booking.DurationHours;
+            existing.Location = Booking.Location;
 
-            // Update fields
-            existingBooking.Title = Booking.Title;
-            existingBooking.Description = Booking.Description;
-            existingBooking.MediaUrls = Booking.MediaUrls;
-            existingBooking.Price = Booking.Price;
-            existingBooking.DurationHours = Booking.DurationHours;
-            existingBooking.Location = Booking.Location;
+            // Optional: normalize MediaUrls if a single comma-separated string was posted
+            if (existing.MediaUrls is { Length: 1 })
+            {
+                var single = existing.MediaUrls[0];
+                if (!string.IsNullOrWhiteSpace(single) && single.Contains(','))
+                {
+                    existing.MediaUrls = single
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                }
+            }
+
+            // Validate the entity we are saving (has required PartitionKey/UserId already)
+            ModelState.Clear();
+            if (!TryValidateModel(existing, nameof(Booking)))
+            {
+                // Re-populate bound model for the page
+                Booking = existing;
+                return Page();
+            }
 
             await _context.SaveChangesAsync();
             return RedirectToPage("Index");

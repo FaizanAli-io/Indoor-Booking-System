@@ -20,7 +20,9 @@ namespace IndoorBookingSystem.Pages.Bookings
             // ✅ Fetch role from session
             UserRole = HttpContext.Session.GetString("UserRole");
 
+            // ✅ Filter by partition key to avoid cross-partition queries in Cosmos
             Bookings = await _context.Bookings
+                                     .Where(b => b.PartitionKey == "Booking")
                                      .OrderByDescending(b => b.CreatedAt)
                                      .ToListAsync();
         }

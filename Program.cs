@@ -4,28 +4,35 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Application Insights (reads connection string from config or env var APPLICATIONINSIGHTS_CONNECTION_STRING)
 builder.Services.AddApplicationInsightsTelemetry();
-
-// Add services
-builder.Services.AddRazorPages();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddRazorPages();
 
 // Add DbContext
+var cosmos = builder.Configuration.GetSection("Cosmos");
+var accountEndpoint = cosmos["AccountEndpoint"] ?? throw new InvalidOperationException("Cosmos AccountEndpoint missing");
+var accountKey = cosmos["AccountKey"] ?? throw new InvalidOperationException("Cosmos AccountKey missing");
+var dbName = cosmos["DatabaseName"] ?? throw new InvalidOperationException("Cosmos DatabaseName missing");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+    options.UseCosmos(accountEndpoint, accountKey, dbName));
 
 // ✅ Add session support
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromHours(1);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.IdleTimeout = TimeSpan.FromHours(1);
 });
 
 var app = builder.Build();
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await db.Database.EnsureCreatedAsync();
+}
 
 // Middleware
 if (!app.Environment.IsDevelopment())
@@ -35,12 +42,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 app.UseStaticFiles();
 app.UseRouting();
-
-// ✅ Enable session before authorization
 app.UseSession();
-app.UseAuthorization();
 
 app.MapRazorPages();
-app.Run();
+await app.RunAsync();
