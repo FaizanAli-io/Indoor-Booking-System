@@ -1,0 +1,110 @@
+@page
+@model IndoorBookingSystem.Pages.Indoors.CreateModel
+@{
+    ViewData["Title"] = "Add New Indoor";
+}
+
+<style>
+    .create-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+    
+    .form-control, .form-select {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        padding: 12px 15px;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="create-header">
+        <h1 class="mb-2"><i class="bi bi-plus-circle"></i> Add New Indoor</h1>
+        <p class="mb-0 opacity-75">Create a new indoor facility listing</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-card mb-4">
+            <h4 class="mb-4"><i class="bi bi-info-circle text-primary"></i> Basic Information</h4>
+            
+            <div class="mb-4">
+                <label asp-for="Indoor.Name" class="form-label fw-bold">
+                    <i class="bi bi-building"></i> Indoor Name
+                </label>
+                <input asp-for="Indoor.Name" class="form-control form-control-lg" placeholder="e.g., City Sports Arena" />
+                <span asp-validation-for="Indoor.Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Indoor.Location" class="form-label fw-bold">
+                    <i class="bi bi-geo-alt"></i> Location
+                </label>
+                <input asp-for="Indoor.Location" class="form-control form-control-lg" placeholder="e.g., Downtown, Main Street" />
+                <span asp-validation-for="Indoor.Location" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Indoor.Description" class="form-label fw-bold">
+                    <i class="bi bi-card-text"></i> Description
+                </label>
+                <textarea asp-for="Indoor.Description" class="form-control" rows="4" placeholder="Describe your indoor facility..."></textarea>
+                <span asp-validation-for="Indoor.Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Indoor.PricePerHour" class="form-label fw-bold">
+                    <i class="bi bi-currency-exchange"></i> Default Price Per Hour (PKR)
+                </label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text">PKR</span>
+                    <input asp-for="Indoor.PricePerHour" class="form-control" type="number" step="1" placeholder="3500" />
+                </div>
+                <span asp-validation-for="Indoor.PricePerHour" class="text-danger"></span>
+                <small class="text-muted">
+                    <i class="bi bi-info-circle"></i> This is the base price. You can add special pricing rules after creation.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-card mb-4">
+            <h4 class="mb-4"><i class="bi bi-images text-primary"></i> Media Files</h4>
+            
+            <div class="mb-3">
+                <label for="mediaFiles" class="form-label fw-bold">Upload Images/Videos</label>
+                <input type="file" name="mediaFiles" id="mediaFiles" class="form-control form-control-lg" multiple accept="image/*,video/*" />
+                <small class="text-muted">
+                    <i class="bi bi-info-circle"></i> You can select multiple files. Supported formats: JPG, PNG, MP4, WEBM
+                </small>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a asp-page="Index" class="btn btn-outline-secondary btn-lg px-4">
+                <i class="bi bi-x-circle"></i> Cancel
+            </a>
+            <button type="submit" class="btn btn-gradient btn-lg px-5">
+                <i class="bi bi-check-circle"></i> Create Indoor
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

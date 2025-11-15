@@ -1,67 +1,212 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Game On! - Book Your Arena";
 }
 
-<div class="container py-5">
+<!-- Hero Section -->
+<div class="hero-sports">
+    <div class="hero-sports-content">
+        <h1 class="hero-sports-title">
+            <i class="bi bi-trophy-fill"></i> Game On!
+        </h1>
+        <p class="hero-sports-subtitle">
+            Find, Book, and Play at Premium Indoor Sports Facilities
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap mt-4">
+            <a class="hero-sports-cta" asp-page="/Indoors/Index">
+                <i class="bi bi-search"></i> Browse Facilities
+            </a>
+            <a class="btn-secondary btn-lg" asp-page="/Auth/Signup" style="background: rgba(255,255,255,0.2); color: white; border-color: white;">
+                <i class="bi bi-person-plus-fill"></i> Get Started
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="container" style="margin-top: -60px; position: relative; z-index: 10;">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card-sports text-center animate-fade-in" style="animation-delay: 0.1s;">
+                <div class="card-sports-body">
+                    <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                        <i class="bi bi-search" style="font-size: 36px; color: white;"></i>
+                    </div>
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px;">1. Search</h3>
+                    <p style="color: var(--color-gray-600); font-size: 15px;">
+                        Browse through our wide selection of indoor sports facilities
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-sports text-center animate-fade-in" style="animation-delay: 0.2s;">
+                <div class="card-sports-body">
+                    <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                        <i class="bi bi-calendar-check-fill" style="font-size: 36px; color: white;"></i>
+                    </div>
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px;">2. Book</h3>
+                    <p style="color: var(--color-gray-600); font-size: 15px;">
+                        Select your preferred date and time slots instantly
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-sports text-center animate-fade-in" style="animation-delay: 0.3s;">
+                <div class="card-sports-body">
+                    <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                        <i class="bi bi-play-circle-fill" style="font-size: 36px; color: white;"></i>
+                    </div>
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px;">3. Play</h3>
+                    <p style="color: var(--color-gray-600); font-size: 15px;">
+                        Show up and enjoy your game at the booked facility
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Type Selection -->
+<div class="container py-5 mt-5">
     <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">Welcome to IndoorBookingSystem</h1>
-        <p class="lead text-muted">
-            Your professional platform for booking indoor sports facilities quickly and efficiently.
+        <h2 style="font-size: 36px; font-weight: 800; color: var(--color-gray-900); margin-bottom: 16px;">
+            Join the Action
+        </h2>
+        <p style="font-size: 18px; color: var(--color-gray-600);">
+            Whether you're looking to play or manage facilities, we've got you covered
         </p>
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="bi bi-calendar-check display-4 text-primary"></i>
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-5">
+            <div class="card-sports h-100" style="border: 3px solid var(--color-primary-light);">
+                <div class="card-sports-body text-center" style="padding: 48px 32px;">
+                    <div style="width: 100px; height: 100px; background: var(--color-primary-lighter); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                        <i class="bi bi-person-circle" style="font-size: 56px; color: var(--color-primary);"></i>
                     </div>
-                    <h5 class="card-title fw-bold">Book Facilities</h5>
-                    <p class="card-text text-muted">
-                        Reserve courts, halls, or any indoor sports space in just a few clicks.
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 16px; color: var(--color-gray-900);">
+                        For Players
+                    </h3>
+                    <p style="color: var(--color-gray-600); font-size: 16px; margin-bottom: 24px; line-height: 1.6;">
+                        Browse and book indoor sports facilities. Find the perfect arena for your game.
                     </p>
-                    <a class="btn btn-outline-primary mt-2" href="/Bookings/Index">Book Now</a>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 32px; text-align: left;">
+                        <li style="padding: 8px 0; color: var(--color-gray-700); font-size: 15px;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--color-primary); margin-right: 8px;"></i>
+                            Search by date & time
+                        </li>
+                        <li style="padding: 8px 0; color: var(--color-gray-700); font-size: 15px;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--color-primary); margin-right: 8px;"></i>
+                            Real-time availability
+                        </li>
+                        <li style="padding: 8px 0; color: var(--color-gray-700); font-size: 15px;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--color-primary); margin-right: 8px;"></i>
+                            Instant booking confirmation
+                        </li>
+                    </ul>
+                    <a class="btn-primary btn-lg w-100" asp-page="/Auth/Signup">
+                        <i class="bi bi-person-plus-fill"></i> Sign Up as Player
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="bi bi-people display-4 text-success"></i>
+        <div class="col-md-5">
+            <div class="card-sports h-100" style="border: 3px solid var(--color-secondary); background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);">
+                <div class="card-sports-body text-center" style="padding: 48px 32px;">
+                    <div style="width: 100px; height: 100px; background: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                        <i class="bi bi-building" style="font-size: 56px; color: var(--color-secondary);"></i>
                     </div>
-                    <h5 class="card-title fw-bold">Manage Teams</h5>
-                    <p class="card-text text-muted">
-                        Organize your teams, track players, and manage matches seamlessly.
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 16px; color: var(--color-gray-900);">
+                        For Facility Owners
+                    </h3>
+                    <p style="color: var(--color-gray-600); font-size: 16px; margin-bottom: 24px; line-height: 1.6;">
+                        List your indoor facilities and manage bookings. Grow your business effortlessly.
                     </p>
-                    <a class="btn btn-outline-success mt-2" href="/Teams/Index">Manage Teams</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="bi bi-bar-chart-line display-4 text-warning"></i>
-                    </div>
-                    <h5 class="card-title fw-bold">Analytics</h5>
-                    <p class="card-text text-muted">
-                        Get insights about bookings, popular times, and user activity on your platform.
-                    </p>
-                    <a class="btn btn-outline-warning mt-2" href="/Analytics/Index">View Analytics</a>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 32px; text-align: left;">
+                        <li style="padding: 8px 0; color: var(--color-gray-700); font-size: 15px;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--color-secondary); margin-right: 8px;"></i>
+                            Dynamic pricing rules
+                        </li>
+                        <li style="padding: 8px 0; color: var(--color-gray-700); font-size: 15px;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--color-secondary); margin-right: 8px;"></i>
+                            Booking management
+                        </li>
+                        <li style="padding: 8px 0; color: var(--color-gray-700); font-size: 15px;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--color-secondary); margin-right: 8px;"></i>
+                            Media showcase
+                        </li>
+                    </ul>
+                    <a class="btn-secondary btn-lg w-100" asp-page="/Auth/Signup" style="background: var(--color-secondary); color: white; border-color: var(--color-secondary);">
+                        <i class="bi bi-building-add"></i> Sign Up as Owner
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="mt-5 text-center">
-        <p class="text-muted">
-            Learn more about <a href="https://learn.microsoft.com/aspnet/core" target="_blank" class="text-decoration-none">building Web apps with ASP.NET Core</a>.
+        <p style="font-size: 16px; color: var(--color-gray-600);">
+            Already have an account? 
+            <a asp-page="/Auth/Login" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">
+                Login here <i class="bi bi-arrow-right"></i>
+            </a>
         </p>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div style="background: var(--color-primary-lighter); padding: 80px 0; margin-top: 80px;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 style="font-size: 36px; font-weight: 800; color: var(--color-gray-900); margin-bottom: 16px;">
+                Why Choose Game On!
+            </h2>
+            <p style="font-size: 18px; color: var(--color-gray-600);">
+                The ultimate platform for indoor sports booking
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center">
+                    <div style="width: 60px; height: 60px; background: var(--color-primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                        <i class="bi bi-lightning-charge-fill" style="font-size: 28px; color: white;"></i>
+                    </div>
+                    <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Instant Booking</h4>
+                    <p style="font-size: 14px; color: var(--color-gray-600);">Book your slots in seconds</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center">
+                    <div style="width: 60px; height: 60px; background: var(--color-primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                        <i class="bi bi-shield-check" style="font-size: 28px; color: white;"></i>
+                    </div>
+                    <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Secure & Safe</h4>
+                    <p style="font-size: 14px; color: var(--color-gray-600);">Your data is protected</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center">
+                    <div style="width: 60px; height: 60px; background: var(--color-primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                        <i class="bi bi-clock-history" style="font-size: 28px; color: white;"></i>
+                    </div>
+                    <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">24/7 Access</h4>
+                    <p style="font-size: 14px; color: var(--color-gray-600);">Book anytime, anywhere</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center">
+                    <div style="width: 60px; height: 60px; background: var(--color-primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                        <i class="bi bi-star-fill" style="font-size: 28px; color: white;"></i>
+                    </div>
+                    <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Top Facilities</h4>
+                    <p style="font-size: 14px; color: var(--color-gray-600);">Premium venues only</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

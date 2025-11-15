@@ -1,0 +1,316 @@
+@page "{id}"
+@model IndoorBookingSystem.Pages.Indoors.EditModel
+@{
+    ViewData["Title"] = "Edit Indoor";
+    
+    string FormatTime12Hour(TimeSpan time)
+    {
+        var hours = time.Hours;
+        var minutes = time.Minutes;
+        var period = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12;
+        if (hours == 0) hours = 12;
+        return $"{hours}:{minutes:D2} {period}";
+    }
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mt-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic" type="button" role="tab">
+                <i class="bi bi-info-circle"></i> Basic Info
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pricing-tab" data-bs-toggle="tab" data-bs-target="#pricing" type="button" role="tab">
+                <i class="bi bi-currency-exchange"></i> Pricing Rules
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="media-tab" data-bs-toggle="tab" data-bs-target="#media" type="button" role="tab">
+                <i class="bi bi-images"></i> Media
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content border border-top-0 p-4">
+        <!-- Basic Info Tab -->
+        <div class="tab-pane fade show active" id="basic" role="tabpanel">
+            <form method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Indoor.Id" />
+        <input type="hidden" asp-for="Indoor.AdminId" />
+        <input type="hidden" asp-for="Indoor.PartitionKey" />
+        <input type="hidden" asp-for="Indoor.CreatedAt" />
+
+        <div class="mb-3">
+            <label asp-for="Indoor.Name" class="form-label"></label>
+            <input asp-for="Indoor.Name" class="form-control" />
+            <span asp-validation-for="Indoor.Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Indoor.Location" class="form-label"></label>
+            <input asp-for="Indoor.Location" class="form-control" />
+            <span asp-validation-for="Indoor.Location" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Indoor.Description" class="form-label"></label>
+            <textarea asp-for="Indoor.Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Indoor.Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Indoor.PricePerHour" class="form-label">Default Price Per Hour (PKR)</label>
+            <div class="input-group">
+                <span class="input-group-text">PKR</span>
+                <input asp-for="Indoor.PricePerHour" class="form-control" type="number" step="1" />
+            </div>
+            <span asp-validation-for="Indoor.PricePerHour" class="text-danger"></span>
+            <small class="text-muted">This is the base price. You can set custom prices in the Pricing Rules tab.</small>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save Basic Info</button>
+            <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+            </form>
+        </div>
+
+        <!-- Pricing Rules Tab -->
+        <div class="tab-pane fade" id="pricing" role="tabpanel">
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5>Dynamic Pricing Rules</h5>
+                        <p class="text-muted mb-0">Set different prices for specific days and time slots</p>
+                    </div>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPricingModal">
+                        <i class="bi bi-plus-circle"></i> Add Rule
+                    </button>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="text-muted">Default Price</h6>
+                        <h3 class="text-primary mb-0">PKR @Model.Indoor.PricePerHour.ToString("N0") <small class="text-muted">/ hour</small></h3>
+                    </div>
+                </div>
+
+                @if (Model.Indoor.PricingRules == null || Model.Indoor.PricingRules.Count == 0)
+                {
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> No custom pricing rules yet. Click "Add Rule" to create one.
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @for (int i = 0; i < Model.Indoor.PricingRules.Count; i++)
+                        {
+                            var rule = Model.Indoor.PricingRules[i];
+                            var days = string.Join(", ", rule.ApplicableDays.Select(d => d.ToString().Substring(0, 3)));
+                            
+                            // Skip old format rules
+                            if (rule.SlotIds == null || rule.SlotIds.Length == 0)
+                            {
+                                continue;
+                            }
+                            
+                            var sortedSlots = rule.SlotIds.OrderBy(s => s).ToArray();
+                            var firstSlot = sortedSlots[0];
+                            var lastSlot = sortedSlots[sortedSlots.Length - 1];
+                            var startDisplay = FormatTime12Hour(TimeSpan.FromHours(firstSlot));
+                            var endDisplay = FormatTime12Hour(TimeSpan.FromHours((lastSlot + 1) % 24));
+                            
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="mb-2">
+                                            <span class="badge bg-info me-1">@days</span>
+                                            <span class="badge bg-secondary">@startDisplay - @endDisplay (@rule.SlotIds.Length slots)</span>
+                                        </div>
+                                        <h5 class="mb-0 text-success">PKR @rule.Price.ToString("N0") <small class="text-muted">/ hour</small></h5>
+                                    </div>
+                                    <a asp-page="Pricing" asp-route-id="@Model.Indoor.Id" class="btn btn-sm btn-outline-primary ms-3">
+                                        <i class="bi bi-pencil"></i> Edit in Pricing
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Media Tab -->
+        <div class="tab-pane fade" id="media" role="tabpanel">
+            <h5 class="mb-3"><i class="bi bi-collection"></i> Current Media (@Model.Indoor.MediaUrls.Length files)</h5>
+            
+            @if (Model.Indoor.MediaUrls.Length > 0)
+            {
+                <div class="row g-3 mb-4">
+                    @for (int i = 0; i < Model.Indoor.MediaUrls.Length; i++)
+                    {
+                        var url = Model.Indoor.MediaUrls[i];
+                        var urlPath = url.Split('?')[0]; // Remove query parameters for extension check
+                        var isVideo = urlPath.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || 
+                                     urlPath.EndsWith(".webm", StringComparison.OrdinalIgnoreCase) || 
+                                     urlPath.EndsWith(".mov", StringComparison.OrdinalIgnoreCase);
+                        
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card h-100 shadow-sm">
+                                <div class="position-relative">
+                                    @if (isVideo)
+                                    {
+                                        <video src="@url" class="card-img-top" style="height: 200px; object-fit: cover;"></video>
+                                        <div class="position-absolute top-50 start-50 translate-middle">
+                                            <i class="bi bi-play-circle-fill text-white" style="font-size: 3rem; opacity: 0.8;"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <img src="@url" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Media" />
+                                    }
+                                    <div class="position-absolute top-0 end-0 p-2">
+                                        <span class="badge bg-dark">
+                                            <i class="bi bi-@(isVideo ? "camera-video" : "image")"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-2">
+                                    <form method="post" asp-page-handler="DeleteMedia" class="d-grid">
+                                        <input type="hidden" name="mediaIndex" value="@i" />
+                                        <button type="submit" class="btn btn-danger btn-sm" 
+                                                onclick="return confirm('Are you sure you want to delete this @(isVideo ? "video" : "image")?')">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No media files uploaded yet. Upload images and videos to showcase your facility.
+                </div>
+            }
+
+            <hr class="my-4" />
+
+            <h5 class="mb-3"><i class="bi bi-cloud-upload"></i> Upload New Media</h5>
+            <form method="post" asp-page-handler="UploadMedia" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="mediaFiles" class="form-label">Select Images/Videos</label>
+                    <input type="file" name="mediaFiles" id="mediaFiles" class="form-control" multiple accept="image/*,video/*" />
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle"></i> 
+                        Supported formats: JPG, PNG, GIF (images) | MP4, WEBM, MOV (videos)
+                    </small>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload"></i> Upload Media
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Pricing Rule Modal -->
+<div class="modal fade" id="addPricingModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="AddPricingRule">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Add Pricing Rule</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Select Days <span class="text-danger">*</span></label>
+                        <div class="row">
+                            @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+                            {
+                                <div class="col-md-6 col-lg-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="selectedDays" value="@day" id="edit_day_@day">
+                                        <label class="form-check-label" for="edit_day_@day">
+                                            <strong>@day</strong>
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Start Time <span class="text-danger">*</span></label>
+                            <input type="time" name="startTime" class="form-control form-control-lg" required />
+                            <small class="text-muted">Example: 06:00 for 6:00 AM</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">End Time <span class="text-danger">*</span></label>
+                            <input type="time" name="endTime" class="form-control form-control-lg" required />
+                            <small class="text-muted">Example: 17:00 for 5:00 PM</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Price (PKR) <span class="text-danger">*</span></label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">PKR</span>
+                            <input type="number" name="price" class="form-control" step="1" min="0" placeholder="3500" required />
+                            <span class="input-group-text">per hour</span>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <strong><i class="bi bi-lightbulb"></i> Examples:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Saturday, 6:00 AM - 5:00 PM: PKR 3500</li>
+                            <li>Saturday, 6:00 PM - 5:00 AM: PKR 4500</li>
+                            <li>Friday, 6:00 PM - 11:00 PM: PKR 4000</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Add Rule
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

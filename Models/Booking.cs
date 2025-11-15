@@ -4,6 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IndoorBookingSystem.Models
 {
+    public enum BookingStatus
+    {
+        Pending,
+        Confirmed,
+        Rejected,
+        Cancelled
+    }
+
     public class Booking
     {
         [Key]
@@ -14,22 +22,23 @@ namespace IndoorBookingSystem.Models
         public string PartitionKey { get; set; } = "Booking";
 
         [Required]
-        public string UserId { get; set; } = string.Empty;
+        public string IndoorId { get; set; } = string.Empty;
 
-        [Required, MinLength(3)]
-        public string Title { get; set; } = string.Empty;
+        [Required]
+        public string CustomerId { get; set; } = string.Empty;
 
-        [Required, MinLength(10)]
-        public string Description { get; set; } = string.Empty;
+        [Required]
+        public DateTime BookingDate { get; set; }
 
-        public string[] MediaUrls { get; set; } = Array.Empty<string>();
+        [Required]
+        public int SlotId { get; set; } // 0-23 (hour of day)
 
-        [Required, MinLength(3)]
-        public string Location { get; set; } = string.Empty;
+        [Required]
+        public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
-        [Required, Range(1, 24)]
-        public int DurationHours { get; set; }
+        public string? ConfirmedByAdminId { get; set; }
 
+        // Store the actual price at the time of booking
         [Required, Range(0, long.MaxValue)]
         public long PriceCents { get; set; }
 

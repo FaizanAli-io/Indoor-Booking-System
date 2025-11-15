@@ -9,6 +9,7 @@ namespace IndoorBookingSystem.Data
             : base(options) { }
 
         public DbSet<User> Users => Set<User>();
+        public DbSet<Indoor> Indoors => Set<Indoor>();
         public DbSet<Booking> Bookings => Set<Booking>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,6 +26,16 @@ namespace IndoorBookingSystem.Data
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Id)
+                .ToJsonProperty("id");
+
+            modelBuilder.Entity<Indoor>()
+                .HasPartitionKey(i => i.PartitionKey)
+                .ToContainer("AppData")
+                .HasDiscriminator<string>("EntityType")
+                .HasValue("Indoor");
+
+            modelBuilder.Entity<Indoor>()
+                .Property(i => i.Id)
                 .ToJsonProperty("id");
 
             modelBuilder.Entity<Booking>()

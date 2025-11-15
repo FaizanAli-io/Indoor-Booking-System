@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<BlobStorageService>();
 builder.Services.AddRazorPages();
 
 // Add DbContext

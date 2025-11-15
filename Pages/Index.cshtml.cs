@@ -5,16 +5,18 @@ namespace IndoorBookingSystem.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
+        public IActionResult OnGet()
         {
-            _logger = logger;
-        }
+            var userRole = HttpContext.Session.GetString("UserRole");
 
-        public void OnGet()
-        {
+            if (string.IsNullOrEmpty(userRole))
+            {
+                // Not logged in - show welcome page
+                return Page();
+            }
 
+            // Redirect based on role
+            return RedirectToPage("/Indoors/Index");
         }
     }
 }
