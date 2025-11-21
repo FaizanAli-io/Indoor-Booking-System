@@ -1,8 +1,18 @@
-﻿using IndoorBookingSystem.Data;
+﻿using Azure.Identity;
+using IndoorBookingSystem.Data;
 using IndoorBookingSystem.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Azure Key Vault
+var keyVaultUri = builder.Configuration["KeyVault:Uri"];
+if (!string.IsNullOrEmpty(keyVaultUri))
+{
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(keyVaultUri),
+        new DefaultAzureCredential());
+}
 
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<AuthService>();
@@ -12,7 +22,7 @@ builder.Services.AddRazorPages();
 // Add DbContext
 var cosmos = builder.Configuration.GetSection("Cosmos");
 var accountEndpoint = cosmos["AccountEndpoint"] ?? throw new InvalidOperationException("Cosmos AccountEndpoint missing");
-var accountKey = cosmos["AccountKey"] ?? throw new InvalidOperationException("Cosmos AccountKey missing");
+var accountKey = builder.Configuration["CosmosDB-AccountKey"] ?? cosmos["AccountKey"] ?? throw new InvalidOperationException("Cosmos AccountKey missing");
 var dbName = cosmos["DatabaseName"] ?? throw new InvalidOperationException("Cosmos DatabaseName missing");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
