@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IndoorBookingSystem.Pages
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         public IActionResult OnGet()
@@ -11,7 +13,7 @@ namespace IndoorBookingSystem.Pages
 
             if (string.IsNullOrEmpty(userRole))
             {
-                // Not logged in - show welcome page
+                // Azure AD authenticated but not logged into app - show welcome page
                 return Page();
             }
 
