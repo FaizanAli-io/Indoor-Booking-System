@@ -1,0 +1,21 @@
+## Build artifacts
+bin/
+obj/
+publish/
+.vs/
+.vscode/
+
+## User-specific files
+*.user
+*.suo
+
+## Deployment packages
+*.zip
+
+## Local settings (contains secrets)
+local.settings.json
+
+## Azure Functions
+__blobstorage__/
+__queuestorage__/
+__azurite_db*__.json
