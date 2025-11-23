@@ -9,7 +9,9 @@ namespace IndoorBookingSystem.Services
 
         public BlobStorageService(IConfiguration configuration)
         {
-            var connectionString = configuration["BlobStorage:ConnectionString"] 
+            // Try Key Vault format first (BlobStorage-ConnectionString), then appsettings format
+            var connectionString = configuration["BlobStorage-ConnectionString"] 
+                ?? configuration["BlobStorage:ConnectionString"]
                 ?? throw new InvalidOperationException("BlobStorage ConnectionString missing");
             var containerName = configuration["BlobStorage:ContainerName"] 
                 ?? throw new InvalidOperationException("BlobStorage ContainerName missing");
