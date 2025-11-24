@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body style="display: flex; flex-direction: column; min-height: 100vh; margin: 0;">
 
     <!-- Sports Theme Navigation -->
     <header>
@@ -102,12 +102,12 @@
     </header>
 
     <!-- Main content -->
-    <main class="container my-4">
+    <main class="container my-4" style="flex: 1;">
         @RenderBody()
     </main>
 
     <!-- Sports Theme Footer -->
-    <footer style="background: white; border-top: 1px solid var(--color-gray-200); margin-top: 80px;">
+    <footer style="background: white; border-top: 1px solid var(--color-gray-200); margin-top: auto;">
         <div class="container py-5">
             <div class="row">
                 <div class="col-md-4 mb-4">
